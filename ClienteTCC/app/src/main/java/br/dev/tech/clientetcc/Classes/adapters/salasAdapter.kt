@@ -1,23 +1,29 @@
 package br.dev.tech.clientetcc.Classes.adapters
 
 import Classes.Sala
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import br.dev.tech.clientetcc.Classes.Client
+import br.dev.tech.clientetcc.JogoActivity
 import br.dev.tech.clientetcc.R
 
-class salasAdapter(private val salas: MutableList<Sala>) :
+
+class salasAdapter(private val salas: MutableMap<Int, Sala>) :
     RecyclerView.Adapter<salasAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView
         val button: Button
+        val jogadores: TextView
+
         init {
             textView = view.findViewById(R.id.textViewSala)
             button = view.findViewById(R.id.buttonSala)
-
+            jogadores = view.findViewById(R.id.textViewjogadores)
         }
     }
 
@@ -36,8 +42,10 @@ class salasAdapter(private val salas: MutableList<Sala>) :
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.textView.text = "Sala " + position
+        viewHolder.jogadores.text =
+            salas[salas.keys.toList()[position]]!!.getJogadores().toString() + "/2"
         viewHolder.button.setOnClickListener {
-
+            Client.joinRoom(salas.keys.toList()[position])
         }
     }
 

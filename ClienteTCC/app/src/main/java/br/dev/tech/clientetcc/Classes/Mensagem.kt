@@ -4,13 +4,14 @@ import java.io.Serializable
 
 class Mensagem : Serializable {
     private var criarSala: Boolean;
-    private var salas: MutableList<Sala>;
+    private var salas: MutableMap<Int, Sala>;
     private var movimento: Boolean;
     private var sala: Sala? = null;
+    private var idSala: Int? = null;
     private var entrar: Boolean;
     constructor(
         criarSala: Boolean? = false,
-        salas: MutableList<Sala> = mutableListOf(),
+        salas: MutableMap<Int, Sala> = mutableMapOf(),
         movimento: Boolean = false,
 
         entrar: Boolean = false
@@ -20,35 +21,45 @@ class Mensagem : Serializable {
         this.movimento = movimento;
         this.entrar = entrar;
     }
-    public fun getSala(): Sala?{
+    fun getSala(): Sala?{
         return this.sala
     }
-
-    public fun getEntrar():Boolean{
+    fun setIdSala(idSala: Int){
+        this.idSala = idSala
+    }
+    fun getIdSala(): Int?{
+        return this.idSala
+    }
+    fun getEntrar():Boolean{
         return this.entrar
     }
     fun setEntrar(entrar: Boolean){
         this.entrar = entrar
     }
 
-    public fun setSala(sala: Sala){
+    fun setSala(sala: Sala){
         this.sala = sala
     }
 
-    public fun getCriarSala(): Boolean {
+    fun getCriarSala(): Boolean {
         return this.criarSala
     }
 
-    public fun getSalas(): MutableList<Sala> {
+    fun getSalas(): MutableMap<Int, Sala> {
         return this.salas
     }
 
-    public fun setSalas(salas: MutableList<Sala>) {
+    fun setSalas(salas: MutableMap<Int, Sala>) {
         this.salas = salas
     }
 
-    public fun setCriarSala(criarSala: Boolean?) {
+     fun setCriarSala(criarSala: Boolean?) {
         this.criarSala = criarSala!!
     }
-
+    fun setMovimento(movimento: Boolean){
+        this.movimento = movimento
+    }
+    fun getMovimento(): Boolean{
+        return this.movimento
+    }
 }

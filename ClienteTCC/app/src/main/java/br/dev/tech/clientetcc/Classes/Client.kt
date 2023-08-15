@@ -28,8 +28,6 @@ object Client {
 
         val latch = CountDownLatch(1)
         Thread {
-            println("TESTE!")
-            println("Teste, THREAD")
             try {
                 val selectorManager = SelectorManager(Dispatchers.IO)
                 client = aSocket(selectorManager)
@@ -49,8 +47,17 @@ object Client {
 
     }
 
-    private fun joinRoom(){
+    fun joinRoom(roomId: Int) {
+        val mensagem = Mensagem();
+        mensagem.setEntrar(true)
+        mensagem.setIdSala(roomId)
+        enviarMensagem(mensagem)
+    }
 
+    fun createRoom() {
+        val mensagem = Mensagem();
+        mensagem.setCriarSala(true)
+        enviarMensagem(mensagem)
     }
 
     private suspend fun updater() {
@@ -66,6 +73,7 @@ object Client {
 
             val mensagem = objUtil.fromBytes(receivedBytes)
             Log.i("Resposta do servidor", mensagem.getSalas().toString())
+            Log.i("Resposta do servidor", mensagem.getEntrar().toString())
             withContext(Dispatchers.Main) {
                 data.value = mensagem
             }
@@ -75,53 +83,49 @@ object Client {
         }
     }
 
-    suspend fun enviarMensagem() {
-        try {
-            return runBlocking {
-
-                println("Ok!")
-                var posicoes: MutableMap<String, Int> = hashMapOf();
-                posicoes["A1"] = 0;
-                var jogo: Jogo = Jogo();
-                jogo.setPosicoes(posicoes)
-
-                var mensagem = Mensagem();
-                mensagem.setCriarSala(true)
-                val mBytes = objUtil.toBytes(mensagem)
-                val packet = buildPacket {
-                    writeInt(mBytes.size) // Grava o tamanho dos bytes
-                    writeFully(mBytes)    // Grava os bytes da mensagem
+    fun enviarMensagem(mensagem: Mensagem) {
+        Thread {
+            runBlocking {
+                withContext(Dispatchers.IO) {
+                    try {
+                        val mBytes = objUtil.toBytes(mensagem)
+                        val packet = buildPacket {
+                            writeInt(mBytes.size) // Grava o tamanho dos bytes
+                            writeFully(mBytes)    // Grava os bytes da mensagem
+                        }
+                        client.send(Datagram(packet, serverAddress))
+                    } catch (e: java.net.PortUnreachableException) {
+                        Log.i("Erro", "Não foi possível conectar-se ao servidor.")
+                    }
                 }
-                client.send(Datagram(packet, serverAddress))
-
             }
-        } catch (e: java.net.PortUnreachableException) {
-            Log.i("Erro", "Não foi possível conectar-se ao servidor.")
-        }
+        }.start()
     }
 
-    suspend fun updateMe() {
-        try {
-            return runBlocking {
-
-                println("Ok!")
-                var posicoes: MutableMap<String, Int> = hashMapOf();
-                posicoes["A1"] = 0;
-                var jogo: Jogo = Jogo();
-                jogo.setPosicoes(posicoes)
-
-                var mensagem = Mensagem();
-                val mBytes = objUtil.toBytes(mensagem)
-                val packet = buildPacket {
-                    writeInt(mBytes.size) // Grava o tamanho dos bytes
-                    writeFully(mBytes)    // Grava os bytes da mensagem
+    fun updateMe() {
+        Thread {
+            runBlocking {
+                withContext(Dispatchers.IO) {
+                    withContext(Dispatchers.Default) {
+                        try {
+                            runBlocking {
+                                println("Ok!")
+                                var mensagem = Mensagem();
+                                val mBytes = objUtil.toBytes(mensagem)
+                                val packet = buildPacket {
+                                    writeInt(mBytes.size) // Grava o tamanho dos bytes
+                                    writeFully(mBytes)    // Grava os bytes da mensagem
+                                }
+                                client.send(Datagram(packet, serverAddress))
+                            }
+                        } catch (e: java.net.PortUnreachableException) {
+                            Log.i("Erro", "Não foi possível conectar-se ao servidor.")
+                        }
+                    }
                 }
-                client.send(Datagram(packet, serverAddress))
-
             }
-        } catch (e: java.net.PortUnreachableException) {
-            Log.i("Erro", "Não foi possível conectar-se ao servidor.")
-        }
+        }.start()
+
     }
 
 }
