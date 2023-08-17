@@ -9,6 +9,8 @@ class Mensagem : Serializable {
     private var sala: Sala? = null;
     private var idSala: Int? = null;
     private var entrar: Boolean;
+    private var usuario: Usuario? = null;
+
     constructor(
         criarSala: Boolean? = false,
         salas: MutableMap<Int, Sala> = mutableMapOf(),
@@ -21,23 +23,36 @@ class Mensagem : Serializable {
         this.movimento = movimento;
         this.entrar = entrar;
     }
-    fun getSala(): Sala?{
+
+    fun setUsuario(usuario: Usuario) {
+        this.usuario = usuario
+    }
+
+    fun getUsuario(): Usuario? {
+        return this.usuario
+    }
+
+    fun getSala(): Sala? {
         return this.sala
     }
-    fun setIdSala(idSala: Int){
+
+    fun setIdSala(idSala: Int) {
         this.idSala = idSala
     }
-    fun getIdSala(): Int?{
+
+    fun getIdSala(): Int? {
         return this.idSala
     }
-    fun getEntrar():Boolean{
+
+    fun getEntrar(): Boolean {
         return this.entrar
     }
-    fun setEntrar(entrar: Boolean){
+
+    fun setEntrar(entrar: Boolean) {
         this.entrar = entrar
     }
 
-    fun setSala(sala: Sala){
+    fun setSala(sala: Sala) {
         this.sala = sala
     }
 
@@ -53,13 +68,15 @@ class Mensagem : Serializable {
         this.salas = salas
     }
 
-     fun setCriarSala(criarSala: Boolean?) {
+    fun setCriarSala(criarSala: Boolean?) {
         this.criarSala = criarSala!!
     }
-    fun setMovimento(movimento: Boolean){
+
+    fun setMovimento(movimento: Boolean) {
         this.movimento = movimento
     }
-    fun getMovimento(): Boolean{
+
+    fun getMovimento(): Boolean {
         return this.movimento
     }
 }

@@ -1,15 +1,15 @@
 package Classes
 
-import io.ktor.network.sockets.*
 import java.io.Serializable
+import java.util.UUID
 
 class Sala : Serializable {
-    private var addresses: MutableSet<SocketAddress> = mutableSetOf()
+    private var ids: MutableSet<UUID> = mutableSetOf()
     private var jogo: Jogo = Jogo();
     private var jogadores: Int = 0;
 
-    constructor(addresses: MutableSet<SocketAddress>, jogo: Jogo) {
-        this.addresses = addresses
+    constructor(ids: MutableSet<UUID>, jogo: Jogo) {
+        this.ids = ids
         this.jogo = jogo
     }
 
@@ -21,12 +21,12 @@ class Sala : Serializable {
         return this.jogadores
     }
 
-    fun getAddresses(): MutableSet<SocketAddress> {
-        return this.addresses
+    fun getIds(): MutableSet<UUID> {
+        return this.ids
     }
 
-    fun setAddresses(mAddresses: MutableSet<SocketAddress>) {
-        this.addresses = mAddresses
+    fun setIds(ids: MutableSet<UUID>) {
+        this.ids = ids
     }
 
     fun getJogo(): Jogo {

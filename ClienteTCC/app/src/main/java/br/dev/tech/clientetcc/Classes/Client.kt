@@ -3,6 +3,7 @@ package br.dev.tech.clientetcc.Classes
 import Classes.Jogo
 import Classes.Mensagem
 import Classes.ObjectUtil
+import Classes.Usuario
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import io.ktor.network.selector.*
@@ -15,10 +16,13 @@ import java.util.concurrent.CountDownLatch
 object Client {
     lateinit var serverAddress: SocketAddress;
     lateinit var client: ConnectedDatagramSocket;
-
+    var usuario: Usuario? = null;
 
     val data: MutableLiveData<Mensagem> by lazy {
         MutableLiveData<Mensagem>()
+    }
+    val usuarioLiveData: MutableLiveData<Usuario> by lazy {
+        MutableLiveData<Usuario>()
     }
     var objUtil: ObjectUtil = ObjectUtil();
     fun connect() {
@@ -74,8 +78,14 @@ object Client {
             val mensagem = objUtil.fromBytes(receivedBytes)
             Log.i("Resposta do servidor", mensagem.getSalas().toString())
             Log.i("Resposta do servidor", mensagem.getEntrar().toString())
+
             withContext(Dispatchers.Main) {
                 data.value = mensagem
+                if (mensagem.getUsuario() != null) {
+                    usuario = mensagem.getUsuario()
+                    usuarioLiveData.value = mensagem.getUsuario()
+                    println(mensagem.getUsuario())
+                }
             }
             // } catch (e: Exception) {
             //     e.printStackTrace()
@@ -88,6 +98,11 @@ object Client {
             runBlocking {
                 withContext(Dispatchers.IO) {
                     try {
+
+                        if (usuario != null) {
+                            println(usuario!!.getId().toString())
+                            mensagem.setUsuario(usuario!!)
+                        }
                         val mBytes = objUtil.toBytes(mensagem)
                         val packet = buildPacket {
                             writeInt(mBytes.size) // Grava o tamanho dos bytes
@@ -103,28 +118,7 @@ object Client {
     }
 
     fun updateMe() {
-        Thread {
-            runBlocking {
-                withContext(Dispatchers.IO) {
-                    withContext(Dispatchers.Default) {
-                        try {
-                            runBlocking {
-                                println("Ok!")
-                                var mensagem = Mensagem();
-                                val mBytes = objUtil.toBytes(mensagem)
-                                val packet = buildPacket {
-                                    writeInt(mBytes.size) // Grava o tamanho dos bytes
-                                    writeFully(mBytes)    // Grava os bytes da mensagem
-                                }
-                                client.send(Datagram(packet, serverAddress))
-                            }
-                        } catch (e: java.net.PortUnreachableException) {
-                            Log.i("Erro", "Não foi possível conectar-se ao servidor.")
-                        }
-                    }
-                }
-            }
-        }.start()
+        enviarMensagem(Mensagem())
 
     }
 

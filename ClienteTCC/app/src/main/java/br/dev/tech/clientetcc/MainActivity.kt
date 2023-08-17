@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         recycler.adapter = salasAdapter(salas)
         lifecycleScope.launch {
             Log.i("A", "THREAD")
-            Client.serverAddress = InetSocketAddress("192.168.1.25", 9002)
+            Client.serverAddress = InetSocketAddress("192.168.1.24", 9002)
             Client.connect()
             Client.updateMe()
 
@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("id", it.getIdSala())
                 this.startActivity(intent)
             }
+
             binding.textView.text = it.getSalas().size.toString()
             salas.clear()
             salas.putAll(it.getSalas())
@@ -71,6 +72,10 @@ class MainActivity : AppCompatActivity() {
                 recycler.adapter = salasAdapter(salas)
                 recycler.layoutManager = LinearLayoutManager(this)
             }
+        }
+
+        Client.usuarioLiveData.observe(this){
+            binding.textViewId.text = it.getId().toString()
         }
     }
 }
