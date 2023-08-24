@@ -10,6 +10,7 @@ class Mensagem : Serializable {
     private var idSala: Int? = null;
     private var entrar: Boolean;
     private var usuario: Usuario? = null;
+    private var sair: Boolean = false;
 
     constructor(
         criarSala: Boolean? = false,
@@ -22,6 +23,14 @@ class Mensagem : Serializable {
         this.salas = salas;
         this.movimento = movimento;
         this.entrar = entrar;
+    }
+
+    fun setSair(sair: Boolean) {
+        this.sair = sair
+    }
+
+    fun getSair(): Boolean {
+        return this.sair
     }
 
     fun setUsuario(usuario: Usuario) {

@@ -5,13 +5,16 @@ import java.io.Serializable
 
 class Jogo : Serializable {
     private var posicoes: MutableMap<String, Int>? = null;
+
     fun setPosicoes(nPosicoes: MutableMap<String, Int>) {
         this.posicoes = nPosicoes;
     }
+
     fun getPosicoes(): MutableMap<String, Int>? {
         return this.posicoes;
     }
-    fun checkGameStatus(): String {
+
+    fun checkGameStatus(): Int {
         val board = posicoes
         // Define todas as possíveis combinações de vitória
         val winCombinations = listOf(
@@ -29,18 +32,18 @@ class Jogo : Serializable {
         for (combination in winCombinations) {
             val values = combination.map { board!![it] }
             if (values.all { it == 1 }) {
-                return "X venceu"
+                return 1
             } else if (values.all { it == 2 }) {
-                return "O venceu"
+                return 2
             }
         }
 
         // Verifica se o tabuleiro está cheio (empate)
         if (board!!.values.all { it != 0 }) {
-            return "Empate"
+            return 0
         }
 
         // Caso nenhum resultado tenha sido determinado
-        return "Jogo em andamento"
+        return -1
     }
 }

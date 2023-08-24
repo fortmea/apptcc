@@ -119,7 +119,6 @@ object Client {
 
     fun updateMe() {
         enviarMensagem(Mensagem())
-
     }
 
 }

@@ -4,20 +4,108 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".JogoActivity"
-    >
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
 
-    <GridView
-        android:id="@+id/gridView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:horizontalSpacing="8dp"
-        android:numColumns="3"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <TextView
+        android:id="@+id/textViewNomeJogador1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewPlacarJogador1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNomeJogador1" />
+
+    <TextView
+        android:id="@+id/textViewNomeJogador2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewPlacarJogador2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNomeJogador2" />
+
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:layout_weight="1"
+        android:columnCount="3"
+        android:columnOrderPreserved="false"
+        android:rowCount="3"
+        app:layout_constraintBottom_toTopOf="@+id/resetButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPlacarJogador1">
+
+        <!-- Adicione botões para cada célula do jogo -->
+        <Button
+            android:id="@+id/button00"
+            style="@style/GameButton" />
+
+        <Button
+            android:id="@+id/button01"
+            style="@style/GameButton" />
+
+        <Button
+            android:id="@+id/button02"
+            style="@style/GameButton" />
+
+        <Button
+            android:id="@+id/button03"
+            style="@style/GameButton" />
+
+        <Button
+            android:id="@+id/button04"
+            style="@style/GameButton" />
+
+        <Button
+            android:id="@+id/button05"
+            style="@style/GameButton" />
+
+        <Button
+            android:id="@+id/button06"
+            style="@style/GameButton" />
+
+        <Button
+            android:id="@+id/button07"
+            style="@style/GameButton" />
+
+        <Button
+            android:id="@+id/button08"
+            style="@style/GameButton" />
+        <!-- Repita para os outros botões (button01, button02, ..., button22) -->
+        <!-- Certifique-se de criar um estilo para os botões com tamanho adequado. -->
+
+    </GridLayout>
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="32dp"
+        android:text="Reiniciar Jogo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
