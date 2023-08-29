@@ -4,13 +4,13 @@ import java.io.Serializable
 import java.util.UUID
 
 class Sala : Serializable {
-    private var ids: MutableSet<UUID> = mutableSetOf()
+    private var usuarios: MutableSet<Usuario> = mutableSetOf()
     private var jogo: Jogo = Jogo();
     private var placar: MutableMap<UUID, Int> = mutableMapOf()
     private var resetarTabuleiro: Boolean = false;
     private var simbolo: MutableMap<Int, UUID> = mutableMapOf()
-    constructor(ids: MutableSet<UUID>, jogo: Jogo) {
-        this.ids = ids
+    constructor(usuarios: MutableSet<Usuario>, jogo: Jogo) {
+        this.usuarios = usuarios
         this.jogo = jogo
     }
 
@@ -35,22 +35,24 @@ class Sala : Serializable {
         return this.placar
     }
 
-    fun getIds(): MutableSet<UUID> {
-        return this.ids
+    fun getUsuarios(): MutableSet<Usuario> {
+        return this.usuarios
     }
 
     fun getJogadores(): Int {
-        return this.ids.size
+        return this.usuarios.size
     }
 
 
-    fun setIds(ids: MutableSet<UUID>) {
-        this.ids = ids
+    fun setUsuarios(usuarios: MutableSet<Usuario>) {
+        this.usuarios = usuarios
     }
 
     fun getJogo(): Jogo {
         return this.jogo
     }
+
+
 
 
 }

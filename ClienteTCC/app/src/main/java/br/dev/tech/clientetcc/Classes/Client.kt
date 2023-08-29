@@ -1,9 +1,6 @@
 package br.dev.tech.clientetcc.Classes
 
-import Classes.Jogo
-import Classes.Mensagem
-import Classes.ObjectUtil
-import Classes.Usuario
+import Classes.*
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import io.ktor.network.selector.*
@@ -17,6 +14,9 @@ object Client {
     lateinit var serverAddress: SocketAddress;
     lateinit var client: ConnectedDatagramSocket;
     var usuario: Usuario? = null;
+    val sala: MutableLiveData<Sala> by lazy {
+        MutableLiveData<Sala>()
+    }
 
     val data: MutableLiveData<Mensagem> by lazy {
         MutableLiveData<Mensagem>()
@@ -85,6 +85,12 @@ object Client {
                     usuario = mensagem.getUsuario()
                     usuarioLiveData.value = mensagem.getUsuario()
                     println(mensagem.getUsuario())
+                }
+                if (mensagem.getSala() != null) {
+                    println("aaaaaaaaaaaaaaaaaaaaaaaaa")
+                    sala.value = mensagem.getSala()
+                } else {
+                    sala.value = mensagem.getSalas()[mensagem.getIdSala()]
                 }
             }
             // } catch (e: Exception) {
