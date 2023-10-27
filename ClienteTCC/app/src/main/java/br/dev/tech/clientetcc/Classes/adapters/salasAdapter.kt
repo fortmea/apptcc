@@ -1,16 +1,19 @@
 package br.dev.tech.clientetcc.Classes.adapters
 
 import Classes.Sala
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import br.dev.tech.clientetcc.Classes.Client
 import br.dev.tech.clientetcc.JogoActivity
 import br.dev.tech.clientetcc.R
+import java.time.Duration
 
 
 class salasAdapter(private val salas: MutableMap<Int, Sala>) :
@@ -19,8 +22,9 @@ class salasAdapter(private val salas: MutableMap<Int, Sala>) :
         val textView: TextView
         val button: Button
         val jogadores: TextView
-
+        val context: Context
         init {
+            context = view.context
             textView = view.findViewById(R.id.textViewSala)
             button = view.findViewById(R.id.buttonSala)
             jogadores = view.findViewById(R.id.textViewjogadores)
@@ -45,7 +49,11 @@ class salasAdapter(private val salas: MutableMap<Int, Sala>) :
         viewHolder.jogadores.text =
             salas[salas.keys.toList()[position]]!!.getJogadores().toString() + "/2"
         viewHolder.button.setOnClickListener {
-            Client.joinRoom(salas.keys.toList()[position])
+            if(salas[position]?.getJogadores()!! <2) {
+                Client.joinRoom(salas.keys.toList()[position])
+            }else{
+                Toast.makeText(viewHolder.context, "Sala cheia", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

@@ -9,13 +9,11 @@ class Jogo : Serializable {
     fun setPosicoes(nPosicoes: MutableMap<String, Int>) {
         this.posicoes = nPosicoes;
     }
-
     fun getPosicoes(): MutableMap<String, Int>? {
         return this.posicoes;
     }
-
     fun checkGameStatus(): Int {
-        val board = posicoes
+        val board = posicoes?.toMutableMap()
         // Define todas as possíveis combinações de vitória
         val winCombinations = listOf(
             listOf("A1", "A2", "A3"),

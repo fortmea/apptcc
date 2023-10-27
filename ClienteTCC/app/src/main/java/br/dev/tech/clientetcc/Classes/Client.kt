@@ -14,6 +14,12 @@ object Client {
     lateinit var serverAddress: SocketAddress;
     lateinit var client: ConnectedDatagramSocket;
     var usuario: Usuario? = null;
+    val onroom: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+    val locked: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
     val sala: MutableLiveData<Sala> by lazy {
         MutableLiveData<Sala>()
     }
@@ -48,14 +54,22 @@ object Client {
         GlobalScope.launch(Dispatchers.IO) {
             updater()
         }
-
     }
 
     fun joinRoom(roomId: Int) {
-        val mensagem = Mensagem();
-        mensagem.setEntrar(true)
-        mensagem.setIdSala(roomId)
-        enviarMensagem(mensagem)
+        println("Entrando em sala")
+        if (locked.value == null) {
+            locked.value = true;
+            val mensagem = Mensagem();
+            mensagem.setEntrar(true)
+            mensagem.setIdSala(roomId)
+            enviarMensagem(mensagem)
+        }
+    }
+
+    fun receberMovimento() {
+        locked.value = !locked.value!!
+
     }
 
     fun createRoom() {
@@ -78,17 +92,18 @@ object Client {
             val mensagem = objUtil.fromBytes(receivedBytes)
             Log.i("Resposta do servidor", mensagem.getSalas().toString())
             Log.i("Resposta do servidor", mensagem.getEntrar().toString())
-
+            if (mensagem.getMovimento()) {
+                receberMovimento()
+            }
             withContext(Dispatchers.Main) {
                 data.value = mensagem
                 if (mensagem.getUsuario() != null) {
                     usuario = mensagem.getUsuario()
                     usuarioLiveData.value = mensagem.getUsuario()
                     println(mensagem.getUsuario())
-                }
-                if (mensagem.getSala() != null) {
-                    println("aaaaaaaaaaaaaaaaaaaaaaaaa")
+                } else if (mensagem.getSala() != null) {
                     sala.value = mensagem.getSala()
+                    println("atualizando sala")
                 } else {
                     sala.value = mensagem.getSalas()[mensagem.getIdSala()]
                 }
@@ -97,6 +112,16 @@ object Client {
             //     e.printStackTrace()
             //}
         }
+    }
+
+    fun enviarMovimento(idSala: Int) {
+
+        var mensagem = Mensagem();
+        mensagem.setIdSala(idSala)
+        mensagem.setMovimento(true)
+        mensagem.setSala(sala.value!!)
+        locked.value = true
+        enviarMensagem(mensagem)
     }
 
     fun enviarMensagem(mensagem: Mensagem) {

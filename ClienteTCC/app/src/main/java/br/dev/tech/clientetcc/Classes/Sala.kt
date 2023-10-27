@@ -9,17 +9,24 @@ class Sala : Serializable {
     private var placar: MutableMap<UUID, Int> = mutableMapOf()
     private var resetarTabuleiro: Boolean = false;
     private var simbolo: MutableMap<Int, UUID> = mutableMapOf()
+
     constructor(usuarios: MutableSet<Usuario>, jogo: Jogo) {
         this.usuarios = usuarios
         this.jogo = jogo
     }
 
-    fun getSimbolo(): MutableMap<Int, UUID>{
+    //2 = O 1 = X
+    fun getSimbolo(): MutableMap<Int, UUID> {
         return this.simbolo;
     }
-    fun setSimbolo(simbolos: MutableMap<Int, UUID>){
+
+    fun setJogo(jogo: Jogo){
+        this.jogo = jogo
+    }
+    fun setSimbolo(simbolos: MutableMap<Int, UUID>) {
         this.simbolo = simbolos
     }
+
     fun setResetarTabuleiro(resetarTabuleiro: Boolean) {
         this.resetarTabuleiro = resetarTabuleiro
     }
@@ -28,9 +35,10 @@ class Sala : Serializable {
         return this.resetarTabuleiro
     }
 
-    fun setPlacar(placar: MutableMap<UUID, Int>){
+    fun setPlacar(placar: MutableMap<UUID, Int>) {
         this.placar = placar
     }
+
     fun getPlacar(): MutableMap<UUID, Int> {
         return this.placar
     }
@@ -51,8 +59,6 @@ class Sala : Serializable {
     fun getJogo(): Jogo {
         return this.jogo
     }
-
-
 
 
 }

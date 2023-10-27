@@ -47,15 +47,15 @@ class MainActivity : AppCompatActivity() {
         recycler.adapter = salasAdapter(salas)
         lifecycleScope.launch {
             Log.i("A", "THREAD")
-            Client.serverAddress = InetSocketAddress("192.168.1.24", 9002)
+            Client.serverAddress = InetSocketAddress("192.168.1.21", 9002)
             Client.connect()
             Client.updateMe()
 
         }
         Client.data.observe(this) {
-            if(it.getEntrar()){
+            if (it.getEntrar() && Client.onroom.value != true) {
                 val intent = Intent(this, JogoActivity::class.java)
-                intent.putExtra("sala", it.getSala())
+                println(it.getSala()?.getSimbolo().toString() + "Deveria carregar a sala")
                 intent.putExtra("id", it.getIdSala())
                 this.startActivity(intent)
             }
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        Client.usuarioLiveData.observe(this){
+        Client.usuarioLiveData.observe(this) {
             binding.textViewId.text = it.getId().toString()
         }
     }
