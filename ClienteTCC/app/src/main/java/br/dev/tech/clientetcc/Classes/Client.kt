@@ -67,8 +67,12 @@ object Client {
         }
     }
 
-    fun receberMovimento() {
-        locked.value = !locked.value!!
+    suspend fun receberMovimento(mensagem: Mensagem) {
+
+        withContext(Dispatchers.Main) {
+            sala.value = mensagem.getSala()
+            locked.value = !locked.value!!
+        }
 
     }
 
@@ -93,7 +97,7 @@ object Client {
             Log.i("Resposta do servidor", mensagem.getSalas().toString())
             Log.i("Resposta do servidor", mensagem.getEntrar().toString())
             if (mensagem.getMovimento()) {
-                receberMovimento()
+                receberMovimento(mensagem)
             }
             withContext(Dispatchers.Main) {
                 data.value = mensagem

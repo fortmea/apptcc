@@ -85,7 +85,7 @@ class JogoActivity : AppCompatActivity(), OnClickListener {
         )
         Client.data.observe(this) {
             println(it);
-            if(it.getMovimento()){
+            if (it.getMovimento()) {
                 println("MOVIMENTO")
             }
 
@@ -94,12 +94,12 @@ class JogoActivity : AppCompatActivity(), OnClickListener {
             sala = it
             println("zapzap")
             println("NOVO JOGADOR?")
-            println("SALA "+sala.toString())
+            println("SALA " + sala.toString())
 
             if (sala != null) {
-                println("JOGADORES "+ sala!!.getUsuarios())
+                println("JOGADORES " + sala!!.getUsuarios())
                 val copia = it.getUsuarios().toMutableList()
-                if(copia.size>1){
+                if (copia.size > 1) {
                     removeUsuarioPorId(copia, Client.usuario!!.getId())
                 }
 
@@ -110,11 +110,17 @@ class JogoActivity : AppCompatActivity(), OnClickListener {
                 binding.textViewNomeJogador2.text = copia[0].getNome().subSequence(0, 12)
                 binding.textViewPlacarJogador2.text =
                     sala!!.getPlacar()[copia[0].getId()].toString()
+
+                if (sala!!.getJogo().getPosicoes() != null) {
+                    println(sala!!.getJogo().getPosicoes())
+                    alterarTextosBotoes(sala!!.getJogo().getPosicoes()!!)
+                }
             }
 
         }
 
     }
+
     fun removeUsuarioPorId(listaUsuarios: MutableList<Usuario>, idUsuario: UUID) {
         val iterator = listaUsuarios.iterator()
         while (iterator.hasNext()) {
@@ -125,8 +131,9 @@ class JogoActivity : AppCompatActivity(), OnClickListener {
             }
         }
     }
+
     override fun onClick(v: View?) {
-        if (Client.locked.value == true) return
+        //if (Client.locked.value == true) return
         v as Button;
         println(v.tag)
         println(mSimbolo)
@@ -138,29 +145,34 @@ class JogoActivity : AppCompatActivity(), OnClickListener {
             )
         }
         sala?.getJogo()?.getPosicoes()?.set(v.tag as String, mSimbolo)
+
+        Client.enviarMovimento(idSala!!)
         var tSimbolo = ""
         if ((mSimbolo == 1)) {
             tSimbolo = "X"
         } else {
-            tSimbolo = "0"
+            tSimbolo = "()"
         }
         v.text = tSimbolo
         println(sala?.getJogo())
 
-        Client.enviarMovimento(idSala!!)
 
     }
 
 
-    fun alterarTextosBotoes(listaTextos: List<String>) {
-        if (listaTextos.size == 9 && botoes.size == 9) {
-            for (i in 0 until 9) {
-                botoes[i].text = listaTextos[i]
-            }
-        } else {
-            throw IllegalArgumentException("A lista de textos e a lista de botões devem ter o tamanho 9.")
+    fun alterarTextosBotoes( mapaTextos: Map<String, Int>) {
+        for (i in botoes.indices) {
+            val chave = positionToKey(i)
+            val valor = mapaTextos[chave] ?: -1 // Valor padrão se a chave não existir no mapa
+
+            botoes[i].text = if (valor == 1) "X" else if(valor ==2) "()" else ""
         }
     }
 
+    fun positionToKey(position: Int): String {
+        val linha = position / 3 + 'A'.toInt()
+        val coluna = position % 3 + 1
+        return "${linha.toChar()}$coluna"
+    }
 
 }

@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         recycler.adapter = salasAdapter(salas)
         lifecycleScope.launch {
             Log.i("A", "THREAD")
-            Client.serverAddress = InetSocketAddress("192.168.1.21", 9002)
+            Client.serverAddress = InetSocketAddress("192.168.1.26", 9002)
             Client.connect()
             Client.updateMe()
 
